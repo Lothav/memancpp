@@ -14,15 +14,15 @@
 namespace mem
 {
     template <class T>
-    struct Allocator {
+    struct StdAllocator {
 
         typedef T value_type;
 
     public:
 
-        Allocator() = default;
+        StdAllocator() = default;
         template <class U> constexpr
-        Allocator(const Allocator<U>&) noexcept {}
+        StdAllocator(const StdAllocator<U>&) noexcept {}
 
         T* allocate(std::size_t size) noexcept
         {
@@ -47,10 +47,10 @@ namespace mem
     };
 
     template <class T, class U>
-    bool operator==(const Allocator<T>&, const Allocator<U>&) { return true; }
+    bool operator==(const StdAllocator<T>&, const StdAllocator<U>&) { return true; }
 
     template <class T, class U>
-    bool operator!=(const Allocator<T>&, const Allocator<U>&) { return false; }
+    bool operator!=(const StdAllocator<T>&, const StdAllocator<U>&) { return false; }
 }
 
 #endif //ONYX_ALLOCATOR_HPP
