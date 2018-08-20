@@ -8,7 +8,7 @@
 #include <map>
 #include "Pool.hpp"
 
-namespace Memory
+namespace mem
 {
     class Provider
     {

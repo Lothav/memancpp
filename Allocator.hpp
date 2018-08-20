@@ -11,7 +11,7 @@
 #include <limits>
 #include "Provider.hpp"
 
-namespace Memory
+namespace mem
 {
     template <class T>
     struct Allocator {

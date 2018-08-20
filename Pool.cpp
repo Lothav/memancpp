@@ -4,7 +4,7 @@
 
 #include "Pool.hpp"
 
-Memory::Pool::Pool(std::size_t size)
+mem::Pool::Pool(std::size_t size)
 {
     size_     = size;
     mem_pool_ = nullptr;
@@ -16,7 +16,7 @@ Memory::Pool::Pool(std::size_t size)
     }
 }
 
-Memory::Pool::~Pool()
+mem::Pool::~Pool()
 {
     if (mem_pool_ == nullptr) {
         std::cerr << "Memory pool not allocated!" << std::endl;
@@ -26,7 +26,7 @@ Memory::Pool::~Pool()
     std::free(mem_pool_);
 }
 
-void* Memory::Pool::get(std::size_t size)
+void* mem::Pool::get(std::size_t size)
 {
     if (mem_pool_ == nullptr) {
         std::cerr << "Memory pool not allocated!" << std::endl;

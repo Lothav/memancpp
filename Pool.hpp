@@ -6,7 +6,7 @@
 #include <cstring>
 #include <array>
 
-namespace Memory
+namespace mem
 {
     class Pool
     {
