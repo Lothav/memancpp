@@ -4,39 +4,38 @@
 
 #include "Pool.hpp"
 
-mem::Pool::Pool(std::size_t size)
+template<class T>
+mem::Pool<T>::Pool(std::size_t size) : size_(size)
 {
-    size_     = size;
-    mem_pool_ = nullptr;
-    pos_      = 0;
-
-    mem_pool_ = std::malloc(size);
-    if (mem_pool_ == nullptr) {
+    mem_pool_.resize(size);
+    if (mem_pool_.capacity() != size) {
         std::cerr << "Error malloc memory pool" << std::endl;
     }
-}
 
-mem::Pool::~Pool()
-{
-    if (mem_pool_ == nullptr) {
-        std::cerr << "Memory pool not allocated!" << std::endl;
-        return;
+    mem_map_.resize(size);
+    for (int i = 0; i < mem_map_.size(); ++i) {
+        mem_map_[i].index = i;
+        mem_map_[i].status = FREE;
     }
-
-    std::free(mem_pool_);
 }
 
-void* mem::Pool::get(std::size_t size)
+template<class T>
+std::shared_ptr<T> mem::Pool<T>::get()
 {
-    if (mem_pool_ == nullptr) {
+    if (mem_pool_.capacity() == 0) {
         std::cerr << "Memory pool not allocated!" << std::endl;
         return nullptr;
     }
 
-    if (pos_+size > size_) pos_ = 0;
+    int free_pos = -1;
+    for (int i = 0; i < mem_map_.size(); ++i) {
+        if(mem_map_[i].status == FREE)
+        {
+            mem_map_[i].status = IN_USE;
+            return mem_pool_[free_pos];
+        }
+    }
 
-    void *pointer = (uint8_t*)(mem_pool_ + pos_);
-    pos_ += size;
-
-    return pointer;
+    std::cerr << "No free memory found! Try to increase pool size!" << std::endl;
+    return nullptr;
 }

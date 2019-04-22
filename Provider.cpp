@@ -5,7 +5,7 @@
 #include "Provider.hpp"
 
 /* Init static member with a empty map */
-mem::Pool* mem::Provider::pool_ = nullptr;
+std::unique_ptr<mem::Pool> mem::Provider::pool_ = nullptr;
 
 void mem::Provider::initPool(std::size_t size) noexcept
 {
@@ -14,7 +14,7 @@ void mem::Provider::initPool(std::size_t size) noexcept
         return;
     }
 
-    pool_ = new mem::Pool(size);
+    pool_ = std::make_unique<mem::Pool>(size);
 }
 
 void* mem::Provider::getMemory(std::size_t size) noexcept
@@ -31,14 +31,3 @@ bool mem::Provider::checkPool() noexcept
 {
     return pool_ != nullptr;
 }
-
-void mem::Provider::destroyPool() noexcept
-{
-    if(!checkPool()) {
-        std::cerr << "Cannot destroy a Pool! (not initialized)" << std::endl;
-        return;
-    }
-
-    delete pool_;
-    pool_ = nullptr;
-};

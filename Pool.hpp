@@ -4,26 +4,34 @@
 #include <malloc.h>
 #include <iostream>
 #include <cstring>
-#include <array>
+#include <vector>
+#include <memory>
 
 namespace mem
 {
+    template<class T>
     class Pool
     {
 
     private:
 
-        void* mem_pool_;
-        unsigned int pos_;
+        enum MemStatus {FREE, IN_USE};
+
+        struct MemMap {
+            uint      index  = 0;
+            MemStatus status = FREE;
+        };
+
+        std::vector<MemMap> mem_map_ = {};
+        std::vector<std::shared_ptr<T>> mem_pool_ = {};
+
         std::size_t size_;
 
     public:
 
         explicit Pool(std::size_t size);
 
-        ~Pool();
-
-        void* get(std::size_t);
+        std::shared_ptr<T> get();
     };
 }
 

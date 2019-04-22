@@ -6,6 +6,7 @@
 #define ONYX_PROVIDER_HPP
 
 #include <map>
+#include <memory>
 #include "Pool.hpp"
 
 namespace mem
@@ -16,16 +17,13 @@ namespace mem
     private:
 
         /* Store circular memory pool.*/
-        static Pool* pool_;
+        static std::unique_ptr<Pool<T>> pool_;
 
     public:
 
         /* Alloc memory pool.
          * Must call destroyPool() to avoid memory leak. */
         static void initPool(std::size_t size) noexcept;
-
-        /* Destroy memory pool. */
-        static void destroyPool() noexcept;
 
         /* Check pool state. */
         static bool checkPool() noexcept;
