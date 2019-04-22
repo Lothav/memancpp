@@ -6,6 +6,7 @@
 #include <cstring>
 #include <vector>
 #include <memory>
+#include <map>
 
 namespace mem
 {
@@ -17,21 +18,18 @@ namespace mem
 
         enum MemStatus {FREE, IN_USE};
 
-        struct MemMap {
-            uint      index  = 0;
-            MemStatus status = FREE;
-        };
-
-        std::vector<MemMap> mem_map_ = {};
-        std::vector<std::shared_ptr<T>> mem_pool_ = {};
+        T* mem_pool_ = nullptr;
+        std::map<void *, MemStatus> mem_map_ = {};
 
         std::size_t size_;
 
     public:
 
         explicit Pool(std::size_t size);
+        ~Pool();
 
-        std::shared_ptr<T> get();
+        void* get();
+        void free(void *);
     };
 }
 
