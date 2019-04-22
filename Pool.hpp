@@ -50,7 +50,7 @@ namespace mem
                 return nullptr;
             }
 
-            for (auto& it = mem_map_.begin(); it != mem_map_.end(); it++) {
+            for (auto it = mem_map_.begin(); it != mem_map_.end(); it++) {
                 if(it->second == FREE) {
                     it->second = IN_USE;
                     return (void *) it->first;
