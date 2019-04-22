@@ -34,7 +34,7 @@ namespace mem
             }
 
             for (int i = 0; i < size; ++i) {
-                mem_map_[mem_pool_ + i] = FREE;
+                mem_map_[mem_pool_ + i  * sizeof(T)] = FREE;
             }
         }
 
