@@ -18,8 +18,8 @@ namespace mem
 
         enum MemStatus {FREE, IN_USE};
 
-        char* mem_pool_ = nullptr;
-        std::map<char *, MemStatus> mem_map_ = {};
+        T* mem_pool_ = nullptr;
+        std::map<T*, MemStatus> mem_map_ = {};
 
         std::size_t size_;
 
@@ -28,19 +28,19 @@ namespace mem
         explicit Pool(std::size_t size) : size_(size)
         {
             // allocate pool
-            mem_pool_ = (char *) malloc(size * sizeof(T));
+            mem_pool_ = (T *) std::malloc(size * sizeof(T));
             if (mem_pool_ == nullptr) {
                 std::cerr << "Error malloc memory pool" << std::endl;
             }
 
             for (int i = 0; i < size; ++i) {
-                mem_map_[mem_pool_ + i * sizeof(T)] = FREE;
+                mem_map_[&mem_pool_[i]] = FREE;
             }
         }
 
         ~Pool()
         {
-            delete[] mem_pool_;
+            std::free(mem_pool_);
         }
 
         void* get()
@@ -63,7 +63,7 @@ namespace mem
 
         void free(void * ptr)
         {
-            mem_map_[(char *) ptr] = FREE;
+            mem_map_[(T *) ptr] = FREE;
         };
     };
 }
