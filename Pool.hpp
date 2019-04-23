@@ -26,7 +26,7 @@ namespace mem
 
     public:
 
-        explicit Pool(std::size_t initial_size) : initial_size_(initial_size)
+        explicit Pool(std::size_t initial_size) : initial_size_(initial_size > 0 ? initial_size : 1)
         {
             // allocate initial pool
             increasePool();
@@ -57,11 +57,6 @@ namespace mem
 
         void* getMemory()
         {
-            if (mem_pool_ == nullptr) {
-                std::cerr << "Memory pool not allocated!" << std::endl;
-                return nullptr;
-            }
-
             for (auto it = mem_map_.begin(); it != mem_map_.end(); it++) {
                 if(it->second == FREE) {
                     it->second = IN_USE;
