@@ -64,7 +64,14 @@ namespace mem
         void free(void * ptr)
         {
             mem_map_[(T *) ptr] = FREE;
-        };
+        }
+
+        void clear()
+        {
+            for (auto it = mem_map_.begin(); it != mem_map_.end(); it++) {
+                it->second = FREE;
+            }
+        }
     };
 }
 
