@@ -21,15 +21,21 @@ namespace mem
         T* mem_pool_ = nullptr;
         std::map<T*, MemStatus> mem_map_ = {};
 
-        std::size_t initial_size_;
-        uint32_t mem_increases_count_ = 0;
+        std::size_t size_;
 
     public:
 
-        explicit Pool(std::size_t initial_size) : initial_size_(initial_size > 0 ? initial_size : 1)
+        explicit Pool(std::size_t size) : size_(size)
         {
-            // allocate initial pool
-            increasePool();
+            // allocate pool
+            mem_pool_ = (T *) std::malloc(size * sizeof(T));
+            if (mem_pool_ == nullptr) {
+                std::cerr << "Error malloc memory pool" << std::endl;
+            }
+
+            for (int i = 0; i < size; ++i) {
+                mem_map_[&mem_pool_[i]] = FREE;
+            }
         }
 
         ~Pool()
@@ -37,26 +43,13 @@ namespace mem
             std::free(mem_pool_);
         }
 
-        void increasePool()
+        void* get()
         {
-            mem_increases_count_++;
-            mem_pool_ = (T *) std::realloc(mem_pool_, getPoolSize());
             if (mem_pool_ == nullptr) {
-                std::cerr << "Error malloc memory pool" << std::endl;
+                std::cerr << "Memory pool not allocated!" << std::endl;
+                return nullptr;
             }
 
-            for (size_t i = initial_size_ * (mem_increases_count_-1); i < initial_size_ * mem_increases_count_; ++i) {
-                mem_map_[&mem_pool_[i]] = FREE;
-            }
-        }
-
-        std::size_t getPoolSize()
-        {
-            return initial_size_ * mem_increases_count_ * sizeof(T);
-        }
-
-        void* getMemory()
-        {
             for (auto it = mem_map_.begin(); it != mem_map_.end(); it++) {
                 if(it->second == FREE) {
                     it->second = IN_USE;
@@ -64,12 +57,8 @@ namespace mem
                 }
             }
 
-            std::cerr << "No free memory found in Pool of type '" << typeid(T).name() << "' with size " << std::to_string(getPoolSize()) << "!" << std::endl;
-            std::cerr << "Trying to increase pool size... ";
-            increasePool();
-            std::cerr << "Success! New size: " << std::to_string(getPoolSize()) << "." << std::endl;
-
-            return getMemory();
+            std::cerr << "No free memory found! Try to increase pool size!" << std::endl;
+            return nullptr;
         }
 
         void free(void * ptr)
