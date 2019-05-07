@@ -31,9 +31,9 @@ namespace mem
                 return nullptr;
             }
 
-            auto* mem = Provider::getMemory(size*sizeof(T));
-            if(auto* p = static_cast<T*>(mem)) return p;
-            if(auto* p = (T *) malloc(size)) return p;
+            //auto* mem = Provider::getMemory(size*sizeof(T));
+            //if(auto* p = static_cast<T*>(mem)) return p;
+            //if(auto* p = (T *) malloc(size)) return p;
 
             std::cerr << "ERR: Cannot get/alloc memory. Size: " << std::to_string(size) << "bytes." << std::endl;
             return nullptr;
