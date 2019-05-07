@@ -9,7 +9,6 @@
 #include <new>
 #include <iostream>
 #include <limits>
-#include "Provider.hpp"
 
 namespace mem
 {
